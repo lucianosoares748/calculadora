@@ -1,0 +1,71 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-weight: thin;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(to right, #000000, #022f8f);
+}
+
+.grid-conteiner {
+    display: grid;  
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: minmax(120px, auto) repeat(5, 100px);
+}
+
+.grid-conteiner > button {
+    /* cursor: pointer;
+    font-size: 2rem;
+    border: 1px solid #111;
+    outline: none;
+    background-color: #111;
+    color: #eee;   */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 50px;
+    outline: none;
+    background-color: #18181873;
+    color: rgb(255, 255, 255);
+    border: 2px solid rgb(5, 102, 212);
+}
+
+.grid-conteiner > .operator {
+    background-color: #1c02ff;
+}
+
+.spanTwo {
+    grid-column: span 2;
+}
+
+.grid-conteiner > .output {
+    grid-column: 1 / -1;
+    background-color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-around;
+    color: white;
+    padding: 10px;
+    word-wrap: break-word;
+    word-break: break-all;
+    border-radius: 25px;
+}
+
+.grid-conteiner > .output > .previous-operand {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1.5rem;
+}
+
+.grid-conteiner > .output > .current-operand {
+    color: white;
+    font-size: 2.5rem;
+}
