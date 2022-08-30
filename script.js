@@ -1,8 +1,8 @@
 const numberButtons = document.querySelectorAll("[data-number]");
 const operationButtons = document.querySelectorAll("[data-operator]");
-const deleButton = document.querySelector("[data-delete]");
+const deleteButton = document.querySelector("[data-delete]");
+const equalsButton = document.querySelector("[data-equals]");
 const allClearButton = document.querySelector("[data-all-clear]");
-const clearButton = document.querySelector("[data-all-clear]");
 const previousOperandTextElement = document.querySelector(
   "[data-previous-operand]"
 );
@@ -17,27 +17,92 @@ class Calculator {
     this.clear();
   }
 
+  formatDisplayNumber(number) {
+    const stringNumber = number.toString();
+
+    const integerDigits = parseFloat(stringNumber.split(".")[0]);
+    const decimalDigits = stringNumber.split(".")[1];
+
+    let integeDisplay;
+
+    if (isNaN(integerDigits)) {
+      integeDisplay = "";
+    } else {
+      integeDisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0,
+      });
+    }
+
+    if (decimalDigits != null) {
+      return `${integeDisplay}.${decimalDigits}`;
+    } else {
+      return integeDisplay;
+    }
+  }
+  delete() {
+    this.currentOperand = this.currentOperand.toString().slice(0, -1);
+  }
+
+  calculate() {
+    let result;
+
+    const _previousOperand = parseFloat(this.previousOperand);
+    const _currentOperand = parseFloat(this.currentOperand);
+    if (isNaN(_previousOperand) || isNaN(_currentOperand)) return;
+
+    switch (this.operation) {
+      case "+":
+        result = _previousOperand + _currentOperand;
+        break;
+      case "-":
+        result = _previousOperand - _currentOperand;
+        break;
+      case "/":
+        result = _previousOperand / _currentOperand;
+        break;
+      case "*":
+        result = _previousOperand * _currentOperand;
+        break;
+      default:
+        return;
+    }
+
+    this.currentOperand = result;
+    this.operation = undefined;
+    this.previousOperand = "";
+  }
+
   chooseOperation(operation) {
+    if (this.currentOperand === "") return;
+    if (this.previousOperand !== "") {
+      this.calculate();
+    }
+
     this.operation = operation;
 
-    this.previousOperand = `${this.currentOperand} ${this.operation}`;
+    this.previousOperand = this.currentOperand;
     this.currentOperand = "";
   }
 
   appendNumber(number) {
     if (this.currentOperand.includes(".") && number === ".") return;
+
     this.currentOperand = `${this.currentOperand}${number.toString()}`;
   }
 
   clear() {
     this.currentOperand = "";
     this.previousOperand = "";
-    this.operand = undefined;
+    this.operation = undefined;
   }
 
   updateDisplay() {
-    this.previousOperandTextElement.innerText = this.previousOperand;
-    this.currentOperandTextElement.innerText = this.currentOperand;
+    this.previousOperandTextElement.innerText = `${this.formatDisplayNumber(
+      this.previousOperand
+    )} ${this.operation || ""}`;
+    this.currentOperandTextElement.innerText = this.formatDisplayNumber(
+      this.currentOperand
+    );
   }
 }
 
@@ -62,5 +127,15 @@ for (const operationButton of operationButtons) {
 
 allClearButton.addEventListener("click", () => {
   calculator.clear();
+  calculator.updateDisplay();
+});
+
+equalsButton.addEventListener("click", () => {
+  calculator.calculate();
+  calculator.updateDisplay();
+});
+
+deleteButton.addEventListener("click", () => {
+  calculator.delete();
   calculator.updateDisplay();
 });
